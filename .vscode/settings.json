@@ -1,0 +1,24 @@
+{
+    "files.exclude": {
+        "node_modules/": true,
+        "paket-files/": true,
+        "packages/": true,
+        ".config/": true,
+        ".devcontainer/": true,
+        ".paket/": true,
+        ".vscode/": true,
+        ".gitignore": true,
+        "License.md": true,
+        "package-lock.json": true,
+        "package.json": true,
+        "paket.dependencies": true,
+        "paket.lock": true,
+        "vite.config.js": true,
+        "src/bin/": true,
+        "src/obj/": true,
+        "src/fable_modules/": true,
+        "src/*.fs.js": true,
+        "src/*.fs.js.map": true,
+        "src/paket.references": true,
+    }
+}

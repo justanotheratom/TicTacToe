@@ -46,7 +46,9 @@ type Components () =
                                 Html.div [
                                     prop.style [
                                         style.backgroundColor.white
+                                        style.fontSize (length.px 90)
                                     ]
+                                    prop.text "O"
                                 ]
                         ]
                     ]
