@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="TicTacToe.fs" />
     <Compile Include="Components.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
