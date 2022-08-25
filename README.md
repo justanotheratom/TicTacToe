@@ -1,8 +1,13 @@
-# Tic Tac Toe
+# Tic-Tac-Toe
 
-This is an implementation of Tic Tac Toe using F#'s [Feliz](https://zaid-ajaj.github.io/Feliz/) library for rendering the User Interface, and Azure Static Web Apps for hosting the FrontEnd.
+This is an implementation of Tic-Tac-Toe using F#'s [Feliz](https://zaid-ajaj.github.io/Feliz/) library for rendering the User Interface, and Azure Static Web Apps for hosting the FrontEnd.
 
-Check it out [here TBD](https://tbd.azurestaticapps.net/).
+Check it out [here](https://zealous-sand-057a9cd10.1.azurestaticapps.net).
+
+Inspirations for this F# Tic-Tac-Toe implementation:
+- [Enterprise Tic-Tac-Toe](https://fsharpforfunandprofit.com/posts/enterprise-tic-tac-toe/)
+- [Tic-Tac-Toe with F#, Azure Functions, HATEOAS and Property-Based Testing](https://mikhail.io/2018/01/tictactoe-with-fsharp-azurefunctions-hateoas-and-property-based-testing/)
+- [Fablelous Enterprise Tic-Tac-Toe](https://martinand.net/2017/05/10/fablelous-enterprise-tic-tac-toe/)
 
 These projects make F# FrontEnd Development a joy:
 - [Fable](https://fable.io/)
