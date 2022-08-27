@@ -6,6 +6,7 @@
     "serve": "vite serve"
   },
   "devDependencies": {
+    "@auth0/auth0-react": "^1.9.0",
     "vite": "^2.4.0"
   },
   "name": "tic-tac-toe",

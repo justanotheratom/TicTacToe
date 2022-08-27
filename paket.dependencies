@@ -2,6 +2,7 @@ group Client
     framework: net6.0
     source https://api.nuget.org/v3/index.json
 
+nuget Fable.Auth0.React
 nuget Feliz
     nuget FSharp.Core
     nuget Fable.Browser.Dom
