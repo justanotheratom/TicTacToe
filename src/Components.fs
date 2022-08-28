@@ -17,23 +17,28 @@ type Components () =
 
         let (gameState, setGameState) = React.useStateWithUpdater(TicTacToe.createGame boardSize)
 
-        let loginAndStart _ =
-            if ctxAuth0.isAuthenticated then
-                setGameState (fun prevState -> TicTacToe.startGame prevState)
-            else
-                let opts = unbox<RedirectLoginOptions> null
-                ctxAuth0.loginWithRedirect opts
-                |> Async.AwaitPromise
-                |> Async.StartImmediate
+        let startGame _ =
+            setGameState (fun prevState -> TicTacToe.startGame prevState)
+
+        let login _ =
+            let opts = unbox<RedirectLoginOptions> null
+            ctxAuth0.loginWithRedirect opts
+            |> Async.AwaitPromise
+            |> Async.StartImmediate
 
         Html.div [
             prop.style [ style.textAlign.center ]
             prop.children [
                 Html.h1 "Tic Tac Toe"
-                if not (TicTacToe.started gameState) then
+                if not ctxAuth0.isAuthenticated then
+                    Html.button [
+                        prop.text "Login"
+                        prop.onClick login
+                    ]
+                else if not (TicTacToe.started gameState) then
                     Html.button [
                         prop.text "Start game"
-                        prop.onClick loginAndStart
+                        prop.onClick startGame
                     ]
                 else
                     Html.p [
