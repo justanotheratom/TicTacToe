@@ -1,8 +1,9 @@
 namespace Components
 
 open Feliz
-open Fable.Core.JS
 open TicTacToe
+open Fable.Auth0.React
+open Fable.Core
 
 type Components () =
 
@@ -12,7 +13,18 @@ type Components () =
     [<ReactComponent>]
     static member TicTacToe() =
 
+        let ctxAuth0 = useAuth0 ()
+
         let (gameState, setGameState) = React.useStateWithUpdater(TicTacToe.createGame boardSize)
+
+        let loginAndStart _ =
+            if ctxAuth0.isAuthenticated then
+                setGameState (fun prevState -> TicTacToe.startGame prevState)
+            else
+                let opts = unbox<RedirectLoginOptions> null
+                ctxAuth0.loginWithRedirect opts
+                |> Async.AwaitPromise
+                |> Async.StartImmediate
 
         Html.div [
             prop.style [ style.textAlign.center ]
@@ -21,7 +33,7 @@ type Components () =
                 if not (TicTacToe.started gameState) then
                     Html.button [
                         prop.text "Start game"
-                        prop.onClick (fun _ -> setGameState (fun prevState -> TicTacToe.startGame prevState))
+                        prop.onClick loginAndStart
                     ]
                 else
                     Html.p [

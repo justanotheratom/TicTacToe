@@ -2,12 +2,21 @@ module App
 
 open Components
 open Browser.Dom
-open Fetch
-open Thoth.Fetch
 open Feliz
+open Fable.Auth0.React
 
+// JS equivalent: <Auth0Provider/>
+let auth0App (children: seq<ReactElement>): ReactElement =
+    let opts =
+        unbox<Auth0ProviderOptions>
+            {| domain = "dev-g54z9aby.us.auth0.com"
+               clientId = "4yrGUE5TnJDuIc1uHWq8kiOwxjdNDevO"
+               redirectUri = Browser.Dom.window.location.href |}
+    Auth0Provider opts children
 
 [<ReactComponent>]
-let App () = React.fragment [ Components.TicTacToe() ]
+let App () =
+    React.fragment [ Components.TicTacToe() ]
 
-ReactDOM.render (App(), document.getElementById "root")
+ReactDOM.render (auth0App [App()],
+                 document.getElementById "root")
