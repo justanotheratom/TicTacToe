@@ -1,9 +1,22 @@
-namespace Components
+module Components
 
 open Feliz
+open Feliz.Router
 open TicTacToe
 open Fable.Auth0.React
 open Fable.Core
+
+type Page =
+    | Login
+    | StartGame
+    | GameBoard
+    | NotFound
+
+let parseUrl = function
+    | []                -> Page.Login
+    | [ "startgame" ]   -> Page.StartGame
+    | [ "gameboard"]    -> Page.GameBoard
+    | _                 -> Page.NotFound
 
 type Components () =
 
@@ -11,45 +24,73 @@ type Components () =
     static let boardSize = 3
 
     [<ReactComponent>]
-    static member TicTacToe() =
+    static member LoginPage() =
 
         let ctxAuth0 = useAuth0 ()
 
-        let (gameState, setGameState) = React.useStateWithUpdater(TicTacToe.createGame boardSize)
-
-        let resetGame () =
-            setGameState (fun _ -> TicTacToe.createGame boardSize)
-
-        let startGame () =
-            setGameState (fun prevState -> TicTacToe.startGame prevState)
-
         let login _ =
-            let opts = unbox<RedirectLoginOptions> null
+            let opts = unbox<RedirectLoginOptions> {| redirectUri = Browser.Dom.window.location.href + Router.format("startgame") |}
             ctxAuth0.loginWithRedirect opts
             |> Async.AwaitPromise
             |> Async.StartImmediate
 
-        let logout _ =
-            resetGame ()
-            let returnTo = Browser.Dom.window.location.href
-            let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
-            ctxAuth0.logout opts
-
-        Html.div [
-            prop.style [ style.textAlign.center ]
-            prop.children [
-                Html.h1 "Tic Tac Toe"
-                if not ctxAuth0.isAuthenticated then
+        if ctxAuth0.isAuthenticated then
+            Router.navigate("startgame")
+            Html.none
+        else
+            Html.div [
+                prop.style [ style.textAlign.center ]
+                prop.children [
+                    Html.h1 "Tic Tac Toe"
                     Html.button [
-                        prop.text "Login"
+                        prop.text "LOGIN"
                         prop.onClick login
                     ]
-                else if not (TicTacToe.started gameState) then
+                ]
+            ]
+
+    [<ReactComponent>]
+    static member StartGamePage() =
+
+        let ctxAuth0 = useAuth0 ()
+
+        if ctxAuth0.isAuthenticated then
+            Html.div [
+                prop.style [ style.textAlign.center ]
+                prop.children [
+                    Html.h1 "Tic Tac Toe"
                     Html.button [
-                        prop.text "Start game"
-                        prop.onClick (fun _ -> startGame())
+                        prop.text "START GAME"
+                        prop.onClick (fun _ -> Router.navigate("gameboard"))
                     ]
-                else
+                ]
+            ]
+        else
+            Router.navigate("login")
+            Html.none
+
+    [<ReactComponent>]
+    static member GameBoardPage() =
+
+        let ctxAuth0 = useAuth0 ()
+
+        if ctxAuth0.isAuthenticated then
+
+            let (gameState, setGameState) = React.useStateWithUpdater(TicTacToe.createGame boardSize)
+
+            let resetGame () =
+                setGameState (fun _ -> TicTacToe.createGame boardSize)
+
+            let logout _ =
+                resetGame ()
+                let returnTo = Browser.Dom.window.location.origin
+                let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
+                ctxAuth0.logout opts
+
+            Html.div [
+                prop.style [ style.textAlign.center ]
+                prop.children [
+                    Html.h1 "Tic Tac Toe"
                     Html.p [
                         Html.text (
                             if (TicTacToe.decided gameState) then
@@ -108,22 +149,39 @@ type Components () =
                     Html.div [
                         Html.button [
                             prop.text "Abandon game"
-                            prop.onClick (fun _ ->  resetGame ())
+                            prop.onClick (fun _ ->
+                                resetGame ()
+                                Router.navigate("startgame")
+                            )
                         ]
                         Html.button [
                             prop.text "Start a fresh game"
-                            prop.onClick (
-                                fun _ ->
-                                    resetGame ()
-                                    startGame ()
-                            )
+                            prop.onClick (fun _ -> resetGame ())
                         ]
                     ]
                     Html.div [
                         Html.button [
-                            prop.text "Logout"
+                            prop.text "LOGOUT"
                             prop.onClick logout
                         ]
                     ]
+                ]
             ]
+        else
+            Router.navigate("login")
+            Html.none
+
+    [<ReactComponent>]
+    static member Router() =
+        let (pageUrl, updateUrl) = React.useState(parseUrl(Router.currentUrl()))
+        let currentPage =
+            match pageUrl with
+            | Page.Login     -> Components.LoginPage()
+            | Page.StartGame -> Components.StartGamePage()
+            | Page.GameBoard -> Components.GameBoardPage()
+            | Page.NotFound  -> Html.h1 "Not Found"
+
+        React.router [
+            router.onUrlChanged (parseUrl >> updateUrl)
+            router.children currentPage
         ]

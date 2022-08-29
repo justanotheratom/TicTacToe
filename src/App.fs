@@ -16,7 +16,7 @@ let auth0App (children: seq<ReactElement>): ReactElement =
 
 [<ReactComponent>]
 let App () =
-    React.fragment [ Components.TicTacToe() ]
+    React.fragment [ Components.Router() ]
 
 ReactDOM.render (auth0App [App()],
                  document.getElementById "root")
