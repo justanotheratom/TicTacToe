@@ -17,7 +17,10 @@ type Components () =
 
         let (gameState, setGameState) = React.useStateWithUpdater(TicTacToe.createGame boardSize)
 
-        let startGame _ =
+        let resetGame () =
+            setGameState (fun _ -> TicTacToe.createGame boardSize)
+
+        let startGame () =
             setGameState (fun prevState -> TicTacToe.startGame prevState)
 
         let login _ =
@@ -25,6 +28,12 @@ type Components () =
             ctxAuth0.loginWithRedirect opts
             |> Async.AwaitPromise
             |> Async.StartImmediate
+
+        let logout _ =
+            resetGame ()
+            let returnTo = Browser.Dom.window.location.href
+            let opts = unbox<LogoutOptions> {| returnTo = returnTo |}
+            ctxAuth0.logout opts
 
         Html.div [
             prop.style [ style.textAlign.center ]
@@ -38,7 +47,7 @@ type Components () =
                 else if not (TicTacToe.started gameState) then
                     Html.button [
                         prop.text "Start game"
-                        prop.onClick startGame
+                        prop.onClick (fun _ -> startGame())
                     ]
                 else
                     Html.p [
@@ -99,17 +108,21 @@ type Components () =
                     Html.div [
                         Html.button [
                             prop.text "Abandon game"
-                            prop.onClick (
-                                fun _ ->
-                                    setGameState (fun _ -> TicTacToe.createGame boardSize)
-                            )
+                            prop.onClick (fun _ ->  resetGame ())
                         ]
                         Html.button [
                             prop.text "Start a fresh game"
                             prop.onClick (
                                 fun _ ->
-                                    setGameState (fun _ -> TicTacToe.createGame boardSize |> TicTacToe.startGame)
+                                    resetGame ()
+                                    startGame ()
                             )
+                        ]
+                    ]
+                    Html.div [
+                        Html.button [
+                            prop.text "Logout"
+                            prop.onClick logout
                         ]
                     ]
             ]
