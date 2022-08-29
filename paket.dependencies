@@ -4,7 +4,8 @@ group Client
 
 nuget Fable.Auth0.React
 nuget Feliz
-    nuget FSharp.Core
-    nuget Fable.Browser.Dom
-    nuget Fable.Core
-    nuget Thoth.Fetch
+nuget Feliz.Router
+nuget FSharp.Core
+nuget Fable.Browser.Dom
+nuget Fable.Core
+nuget Thoth.Fetch
