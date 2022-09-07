@@ -23,3 +23,7 @@ RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-p
 
 # Set default language to F#
 ENV DOTNET_NEW_PREFERRED_LANG=F#
+
+# Install the F# project templates for dotnet-new
+RUN dotnet new --install Microsoft.Azure.WebJobs.ItemTemplates \
+    && dotnet new --install Microsoft.Azure.WebJobs.ProjectTemplates
