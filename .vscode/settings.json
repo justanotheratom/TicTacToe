@@ -1,4 +1,4 @@
-{
+/*{
     "files.exclude": {
         "node_modules/": true,
         "paket-files/": true,
@@ -23,3 +23,4 @@
         "src/paket.references": true,
     }
 }
+*/

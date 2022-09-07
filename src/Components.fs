@@ -5,6 +5,8 @@ open Feliz.Router
 open TicTacToe
 open Fable.Auth0.React
 open Fable.Core
+open Fetch
+open Thoth.Fetch
 
 type Page =
     | Login
@@ -22,6 +24,36 @@ type Components () =
 
     [<Literal>]
     static let boardSize = 3
+
+    [<ReactComponent>]
+    static member Message () =
+        let (message, setMessage) = React.useState ("")
+
+        Html.div [
+            prop.children [
+                Html.button [
+                    prop.text "Get a message from the API"
+                    prop.onClick(
+                        fun _ ->
+                            promise {
+                                let! message =
+                                    Fetch.get (
+                                        "/api/GetMessage?name=FSharp",
+                                        headers = [ HttpRequestHeaders.Accept "application/json" ]
+                                    )
+
+                                setMessage message
+                                return ()
+                            }
+                            |> ignore
+                    )
+                ]
+                if message = "" then
+                    Html.none
+                else
+                    Html.p message
+            ]
+        ]
 
     [<ReactComponent>]
     static member LoginPage() =
@@ -183,5 +215,8 @@ type Components () =
 
         React.router [
             router.onUrlChanged (parseUrl >> updateUrl)
-            router.children currentPage
+            router.children [
+                currentPage
+                Components.Message()
+            ]
         ]
