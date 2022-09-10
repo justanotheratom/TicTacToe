@@ -162,6 +162,5 @@ type Components () =
             router.onUrlChanged (parseUrl >> updateUrl)
             router.children [
                 currentPage
-                Components.Message()
             ]
         ]
