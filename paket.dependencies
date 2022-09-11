@@ -15,6 +15,7 @@ group Api
 
     nuget FSharp.Core
     nuget Microsoft.NET.Sdk.Functions
+    nuget Microsoft.Azure.WebJobs.Extensions.SignalRService
 
     # avoid getting a .NET 5 version through transient deps
     # nuget Microsoft.Extensions.Logging.Abstractions 3.1.16
