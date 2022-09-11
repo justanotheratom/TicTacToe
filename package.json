@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "start": "dotnet fable watch src --sourceMaps --run vite",
-    "build": "dotnet fable src --sourceMaps --run vite build",
+    "build": "dotnet fable src --sourceMaps --run vite build && cp src/staticwebapp.config.json public/",
     "serve": "vite serve"
   },
   "devDependencies": {
