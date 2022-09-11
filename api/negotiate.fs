@@ -13,7 +13,7 @@ open Microsoft.Azure.WebJobs.Extensions.SignalRService
 [<FunctionName("negotiate")>]
 let negotiate
     ([<HttpTrigger(AuthorizationLevel.Anonymous)>] req: HttpRequest)
-    ([<SignalRConnectionInfo (HubName = "tictactoe", UserId = "{headers.x-ms-client-principal-id}")>] connectionInfo: SignalRConnectionInfo)
+    ([<SignalRConnectionInfo (HubName = "tictactoe")>] connectionInfo: SignalRConnectionInfo)
     :
     SignalRConnectionInfo
     =
