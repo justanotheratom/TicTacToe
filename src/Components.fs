@@ -1,11 +1,14 @@
 module Components
 
+open Fable.Core
+open Fable.SignalR
+open Fable.SignalR.Feliz
 open Feliz
 open Feliz.Router
-open TicTacToe
-open Fable.Core
 open Fetch
 open Thoth.Fetch
+
+open TicTacToe
 
 type Page =
     | StartGame
@@ -17,6 +20,15 @@ let parseUrl = function
     | [ "startgame" ]   -> Page.StartGame
     | [ "gameboard"]    -> Page.GameBoard
     | _                 -> Page.NotFound
+
+module SignalRHub =
+    [<RequireQualifiedAccess>]
+    type Action =
+        | UpdateGameState
+
+    [<RequireQualifiedAccess>]
+    type Response =
+        | UpdateGameState
 
 type Components () =
 
@@ -151,7 +163,20 @@ type Components () =
 
     [<ReactComponent>]
     static member Router() =
+
+        let hub =
+            React.useSignalR<SignalRHub.Action,SignalRHub.Response>(
+                fun hub -> 
+                    hub.withUrl("/api")
+                        .withAutomaticReconnect()
+                        .configureLogging(LogLevel.Debug)
+                        .onMessage <|
+                            function
+                            | SignalRHub.Response.UpdateGameState -> ()
+            )
+
         let (pageUrl, updateUrl) = React.useState(parseUrl(Router.currentUrl()))
+
         let currentPage =
             match pageUrl with
             | Page.StartGame -> Components.StartGamePage()
