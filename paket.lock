@@ -588,10 +588,6 @@ RESTRICTION: == net6.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Fable.AST (4.1)
-    Fable.Auth0.React (1.0.1)
-      Fable.Core (>= 3.6.1)
-      Fable.React (>= 7.4.3)
-      FSharp.Core (>= 6.0.1)
     Fable.Browser.Blob (1.2)
       Fable.Core (>= 3.0)
       FSharp.Core (>= 4.7.2)
