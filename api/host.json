@@ -1,6 +1,11 @@
 {
     "version": "2.0",
+    "CORS": "*",
     "Values": {
     "AzureSignalRConnectionString": "Endpoint=https://tictactoefungee.service.signalr.net;AccessKey=0y2B1jWdQzYuSmLSgEFUlbUtK59LQMmrkGREKqGFuHE=;Version=1.0;"
+    },
+    "Host": {
+    "CORS": "*",
+    "CORSCredentials": false
     }
 }
