@@ -1,6 +1,3 @@
 {
-    "version": "2.0",
-    "Values": {
-    "AzureSignalRConnectionString": "Endpoint=https://tictactoefungee.service.signalr.net;AccessKey=0y2B1jWdQzYuSmLSgEFUlbUtK59LQMmrkGREKqGFuHE=;Version=1.0;"
-    }
+    "version": "2.0"
 }
