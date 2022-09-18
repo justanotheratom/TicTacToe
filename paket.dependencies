@@ -2,6 +2,8 @@ group Client
     framework: net6.0
     source https://api.nuget.org/v3/index.json
 
+nuget Fable.SignalR
+nuget Fable.SignalR.Feliz
 nuget Feliz
 nuget Feliz.Router
 nuget FSharp.Core
@@ -15,6 +17,7 @@ group Api
 
     nuget FSharp.Core
     nuget Microsoft.NET.Sdk.Functions
+    nuget Microsoft.Azure.WebJobs.Extensions.SignalRService
 
     # avoid getting a .NET 5 version through transient deps
     # nuget Microsoft.Extensions.Logging.Abstractions 3.1.16

@@ -22,7 +22,9 @@
 		"ms-python.python",
 		"ionide.ionide-fsharp",
 		"ionide.ionide-paket",
-		"ms-edgedevtools.vscode-edge-devtools"
+		"ms-edgedevtools.vscode-edge-devtools",
+		"github.copilot",
+		"donjayamanne.githistory"
 	],
 
 	// Use 'postCreateCommand' to run commands after the container is created.

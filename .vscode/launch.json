@@ -2,32 +2,38 @@
   "version": "0.2.0",
   "configurations": [
     {
-        "command": "swa start http://localhost:3000 --api http://localhost:7071",
-        "name": "Run emulator",
-        "request": "launch",
-        "type": "node-terminal"
+      "command": "swa start http://localhost:3000 --api-location http://localhost:7071",
+      "name": "Run emulator",
+      "request": "launch",
+      "type": "node-terminal"
     },
     {
-        "command": "npm start",
-        "name": "Run frontend",
-        "request": "launch",
-        "type": "node-terminal"
+      "command": "npm start",
+      "name": "Run frontend",
+      "request": "launch",
+      "type": "node-terminal"
     },
     {
-        "command": "func start",
-        "name": "Run backend",
-        "request": "launch",
-        "type": "node-terminal",
-        "cwd": "${workspaceFolder}/api"
+      "command": "func start",
+      "name": "Run backend",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/api"
+    },
+    {
+      "name": "Attach to .NET Functions",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:azureFunctions.pickProcess}"
     }
-],
+  ],
   "compounds": [
     {
       "name": "Launch it all 🚀",
       "configurations": [
-        "Run emulator",
+        "Run backend",
         "Run frontend",
-        "Run backend"
+        "Run emulator"
       ]
     }
   ]
