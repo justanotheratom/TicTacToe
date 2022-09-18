@@ -10,6 +10,8 @@ open Thoth.Fetch
 
 open TicTacToe
 
+let [<Global>] console: JS.Console = jsNative
+
 type Page =
     | StartGame
     | GameBoard
@@ -24,11 +26,14 @@ let parseUrl = function
 module SignalRHub =
     [<RequireQualifiedAccess>]
     type Action =
-        | UpdateGameState
+        | CreateGameRoom of string
+        | JoinGameRoom of string
+        | UpdateGameState of TicTacToe.GameState
 
     [<RequireQualifiedAccess>]
     type Response =
-        | UpdateGameState
+        | GameRoomCreated of string
+        | UpdateGameState of TicTacToe.GameState
 
 type Components () =
 
@@ -66,17 +71,66 @@ type Components () =
         ]
 
     [<ReactComponent>]
-    static member StartGamePage() =
-            Html.div [
-                prop.style [ style.textAlign.center ]
-                prop.children [
-                    Html.h1 "Tic Tac Toe"
-                    Html.button [
-                        prop.text "START GAME"
-                        prop.onClick (fun _ -> Router.navigate("gameboard"))
+    static member StartGamePage (hub: IRefValue<Fable.SignalR.Hub<SignalRHub.Action,SignalRHub.Response>>) =
+
+        let (playerName, setPlayerName) = React.useState ("")
+        let (gameRoomName, setGameRoomName) = React.useState ("")
+
+        Html.div [
+            prop.style [ style.textAlign.center ]
+            prop.children [
+                Html.h1 "Tic Tac Toe"
+                Html.div [
+                    prop.children [
+                        Html.label [
+                            prop.text "Name"
+                        ]
+                        Html.input [
+                            prop.style [
+                                style.margin 10
+                            ]
+                            prop.type' "text"
+                            prop.placeholder "Your Name"
+                            prop.onTextChange (fun name -> (setPlayerName name))
+                        ]
                     ]
                 ]
+                Html.div [
+                    prop.children [
+                        Html.label [
+                            prop.text "Game Room"
+                        ]
+                        Html.input [
+                            prop.style [
+                                style.margin 10
+                            ]
+                            prop.type' "text"
+                            prop.placeholder "Game Room Name"
+                            prop.onTextChange (fun name -> (setGameRoomName name))
+                        ]
+                    ]
+                ]
+                Html.button [
+                    prop.text "CREATE"
+                    prop.onClick <| fun _ -> 
+                        promise {
+                            console.log("invoking CreateGameRoom")
+                            let! rsp = hub.current.invokeAsPromise (SignalRHub.Action.CreateGameRoom gameRoomName)
+
+                            match rsp with
+                            | SignalRHub.Response.GameRoomCreated gameRoomName ->
+                                console.log(gameRoomName)
+                                Router.navigate("gameboard")
+                            | _ -> ()
+                        }
+                        |> Promise.start
+                ]
+                Html.button [
+                    prop.text "JOIN"
+                    prop.onClick (fun _ -> Router.navigate("gameboard"))
+                ]
             ]
+        ]
 
     [<ReactComponent>]
     static member GameBoardPage() =
@@ -172,14 +226,15 @@ type Components () =
                         .configureLogging(LogLevel.Debug)
                         .onMessage <|
                             function
-                            | SignalRHub.Response.UpdateGameState -> ()
+                            | SignalRHub.Response.GameRoomCreated roomName -> ()
+                            | SignalRHub.Response.UpdateGameState gameState -> ()
             )
 
         let (pageUrl, updateUrl) = React.useState(parseUrl(Router.currentUrl()))
 
         let currentPage =
             match pageUrl with
-            | Page.StartGame -> Components.StartGamePage()
+            | Page.StartGame -> Components.StartGamePage hub
             | Page.GameBoard -> Components.GameBoardPage()
             | Page.NotFound  -> Html.h1 "Not Found"
 
